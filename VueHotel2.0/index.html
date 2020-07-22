@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1.0,width=device-width">
+	
+	</head>
+	<body>
+		<div id="app" onclick="CHUtil.g_restart_page_timer();">
+		  <div class="dk-content">
+		  <!-- 路由出口 -->
+		  <!-- 路由匹配到的组件将渲染在这里 -->
+		    
+			<router-view class="child-view">Hello world</router-view>
+		  </div>
+		</div>
+		
+		<script type="text/javascript">
+			// 检测浏览器是否支持SW
+			  if(navigator.serviceWorker != null){
+			    navigator.serviceWorker.register('sw.js')
+			    .then(function(registartion){
+			      console.log('支持sw:',registartion.scope)
+			    })
+			  }
+			        
+		</script>
+		
+	</body>
+</html>
