@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1.0,width=device-width">
+		<link rel="stylesheet" id="base_css" href="style/css/base.css?v=1.0" />
+		<link rel="stylesheet" href="js/lib/layui/css/layui.css" />
+		<link rel="stylesheet" id="dk_css" href="style/css/dk-01.css" />
+		<!-- <script type="text/javascript" id="dk_template_js" src="" ></script> -->
+    <script type="text/javascript">
+		var _g_client_width = document.documentElement.clientWidth;//屏幕宽度
+		var _g_client_height = document.documentElement.clientHeight;
+		var _g_w_h_rate = _g_client_width / _g_client_height;//宽高比
+		var _g_is_v_screen = _g_w_h_rate > 1 ? false : true;//是否竖屏,false:横屏,true:竖屏
+		
+    	document.documentElement.style.fontSize = _g_client_width * 12/ 640 + 'px';
+    	//document.documentElement.style.fontSize = '16px';
+		function load_src(){
+			var base_css=document.getElementById("base_css");
+			var dk_css=document.getElementById("dk_css");
+			//var dk_template_js=document.getElementById("dk_template_js");
+			if(_g_is_v_screen){//竖屏
+			    base_css.setAttribute("href","style/css/base.vertical.css"); //设置css引入样式表的路径
+			    dk_css.setAttribute("href","style/css/dk-01.vertical.css"); //设置css引入样式表的路径
+				 document.write('<script type="text/javascript" src="js/v-page-template.vertical.js"><\/script>');
+			}else{
+				document.write('<script type="text/javascript" src="js/page-template.js"><\/script>');
+			}
+		}
+		load_src();
+    </script>
+		<script type="text/javascript" src="js/lib/vue.min.js" ></script>
+	</head>
+	<body>
+		<div id="app" onclick="CHUtil.g_restart_page_timer();">
+		  <div class="dk-content">
+		  <!-- 路由出口 -->
+		  <!-- 路由匹配到的组件将渲染在这里 -->
+		    
+			<router-view class="child-view"></router-view>
+		  </div>
+		</div>
+		<div class="dk-popup-spanel" id="dk-popup-spanel"></div>
+		<div class="dk-popup-spanel2" id="dk-popup-spanel2"></div>
+		<div id="show-debug-info" class="show-debug-info" style="display: none;word-break: break-word;overflow: auto;height: 98%;z-index: 100;top: 0px;position: absolute;color: red;font-size: 22px;width: 40%;background-color: rgb(190, 197, 197);"></div>
+        <div id="clear-debug-info" style="display: none;position: absolute;bottom: 4%;left: 24%;z-index: 1000;">
+			<a id="hide-debug-btn" href="javascript:void(0);" style="font-size: 24px;padding: 10px 20px;left: 10%;background-color: cadetblue;">收起</a>
+			<a id="clear-debug-btn" href="javascript:void(0);" style="font-size: 24px;padding: 10px 20px;left: 30%;background-color: cadetblue;">清空</a>
+			<a id="close-debug-btn" href="javascript:void(0);" style="font-size: 24px;padding: 10px 20px;left: 20%;background-color: cadetblue;">关闭</a>
+		</div>
+	<script src="cd.js"></script>
+    <script src="cd_plugins.js"></script>
+		
+		<script type="text/javascript" src="js/lib/vue-router.js" ></script>
+		<script type="text/javascript" src="js/lib/vue-resource.min.js" ></script>
+		<script type="text/javascript" src="js/model/demoModel.js" ></script>
+		<script type="text/javascript" src="js/model/appModel.js" ></script>
+		<script type="text/javascript" src="js/model/taskModel.js" ></script>
+		<script type="text/javascript" src="js/lib/webSocket/webSocket.js" ></script>
+		<script type="text/javascript" src="js/services/wsProxy.js" ></script>
+		<script type="text/javascript" src="js/services/wsServices.js" ></script>
+		<script type="text/javascript" src="js/lib/date/date-localtime.js" ></script>
+		<script type="text/javascript" src="js/lib/common/util.js" ></script>
+		<script type="text/javascript" src="js/lib/common/locate-msg.js" ></script>
+		<script type="text/javascript" src="js/lib/common/md5.js" ></script>
+		<script type="text/javascript" src="js/lib/common/qrcode.min.js" ></script>
+		<script type="text/javascript" src="js/services/apiServices.js" ></script>
+		<script type="text/javascript" src="js/controller/index_controller.js" ></script>
+		<script type="text/javascript" src="js/controller/home_controller.js" ></script>
+		<script type="text/javascript" src="js/components/com-index.js" ></script>
+		<script type="text/javascript" src="js/components/com-home.js" ></script>
+		<script type="text/javascript" src="js/my-router.js" ></script>
+		<script type="text/javascript" src="js/index.js" ></script>
+		<script type="text/javascript">
+			SK_INDEX.init();
+			var debugDom = document.getElementById("show-debug-info");
+			var hideDebugBtn = document.getElementById("hide-debug-btn");
+			var clearDebugInfo = document.getElementById("clear-debug-info");
+			function clear_log_info(){
+				debugDom.innerHTML = "";
+			}
+			function close_log_info(){
+				CHUtil.show_local_log(false);
+			}
+			function hide_log_info(){
+				if(CHUtil.hasClass("show-debug-info","hide")){
+					hideDebugBtn.innerText="收起";
+					debugDom.style.width="40%";
+					clearDebugInfo.style.left="24%";
+					CHUtil.removeClass("show-debug-info","hide");
+				}else{
+					CHUtil.addClass("show-debug-info","hide");
+					hideDebugBtn.innerText="展开";
+					debugDom.style.width="0";
+					clearDebugInfo.style.left="1%";
+				}
+				
+			}
+			
+			hideDebugBtn.addEventListener('click', hide_log_info, false); //鼠标单击的时候调用showMes这个函数  
+			
+			var clearDebugBtn = document.getElementById("clear-debug-btn");
+			clearDebugBtn.addEventListener('click', clear_log_info, false); //鼠标单击的时候调用showMes这个函数  
+			
+			var closeDebugBtn = document.getElementById("close-debug-btn");
+			closeDebugBtn.addEventListener('click', close_log_info, false); //鼠标单击的时候调用showMes这个函数  
+			
+			app.$router.push({"path":"/index"});
+			        
+		</script>
+		
+	</body>
+</html>
